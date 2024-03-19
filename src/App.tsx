@@ -1,5 +1,6 @@
 import { Cart, Products } from './Products.tsx';
-import { Box, CssBaseline } from '@mui/material';
+import CssBaseline from "@mui/material/CssBaseline";
+import Box from "@mui/material/Box";
 import SearchAppBar from './SearchAppBar.tsx';
 import { Categories } from './Categories.tsx';
 import { useState } from 'react';
