@@ -4,14 +4,14 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App.tsx';
 import { enableMockServiceWorker } from './mocks/browser.ts';
-// import ThemeProvider from './providers/ThemeProvider.tsx';
+import { BrowserRouter } from 'react-router-dom';
 
 enableMockServiceWorker().then(() => {
   ReactDOM.createRoot(document.getElementById('root')!).render(
     <React.StrictMode>
-      {/* <ThemeProvider> */}
-          <App/>
-      {/* </ThemeProvider> */}
+      <BrowserRouter>
+        <App/>
+      </BrowserRouter>
     </React.StrictMode>,
   );
 });
