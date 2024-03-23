@@ -5,24 +5,25 @@ import {StyledFilterControlsContainer, StyledFlexCenter} from '../styled-compone
 import SearchIcon from '@mui/icons-material/Search';
 import ClearIcon from '@mui/icons-material/Clear';
 import {StyledSearchIconWrapper, StyledSearch, StyledInputBase} from '../styled-components/materialUIExtensions'
-import { PaginationOption } from '../../constants';
+import { PaginationOption, SearchParamsProps } from '../../constants';
 
-type FilterControlProps = { 
-    setSearchParams: (params: URLSearchParams) => void;
-    searchParams: URLSearchParams;
-}
+
 
 const FilterControls = ({
     setSearchParams,
     searchParams
-}: FilterControlProps) => {
-    const [limitSearchParam, setLimitSearchParam] = useState(PAGINATION_OPTIONS[0])
+}: SearchParamsProps) => {
+    const [limitSearchParam, setLimitSearchParam] = useState({})
     const [searchText, setSearchText] = useState('');
 
   // Set limit default all
     useEffect(() => {
-        if (!searchParams.has('limit')) searchParams.set('limit', PAGINATION_OPTIONS[0].value)
-        setLimitSearchParam(PAGINATION_OPTIONS[0])
+        if (!searchParams.has('limit')) {
+            searchParams.set('limit', PAGINATION_OPTIONS[0].value)
+            setLimitSearchParam(PAGINATION_OPTIONS[0])
+        }else{
+            setLimitSearchParam(PAGINATION_OPTIONS.filter(element => element.value === searchParams.get('limit'))[0])
+        }
         setSearchParams(searchParams)
     }, [])
 
@@ -31,8 +32,7 @@ const FilterControls = ({
       updateSearchParams('q', searchText);
     }, [searchText]);
     
-
-        // Update Search Params
+   // Update Search Params
     const updateSearchParams = ( searchOption: string, value: string) => {
         if (searchOption === 'limit') {
             let val = PAGINATION_OPTIONS.find((option: PaginationOption) => option.label === PAGINATION_OPTIONS[parseInt(value)].label)
@@ -46,6 +46,7 @@ const FilterControls = ({
         setSearchParams(searchParams)
     }
 
+     
     return (
         <>
         <StyledFilterControlsContainer>

@@ -17,6 +17,8 @@ import { useLocation, useSearchParams } from 'react-router-dom';
 import FilterControls from './components/FilterControls/FilterControls.tsx';
 import {StyledFlexCenter} from  './components/styled-components/containers'
 import { Categories } from './Categories.tsx';
+import { PAGINATION_OPTIONS } from './constants';
+import { PaginationOption } from './constants';
 
 export type Product = {
   id: number;
@@ -39,15 +41,16 @@ export const Products = ({ onCartChange }: { onCartChange: (cart: Cart) => void 
   const [loading, setLoading] = useState<boolean>(false);
   const location = useLocation();
 
-  console.log();
 
-
+  // Fetch products if searchParams is updated
   useEffect(() => {
     setLoading(true)
     let url = `/products${location.search}`
     fetch(url)
     .then(response => response.json())
-    .then(data => setProducts(data.products))
+    .then(data => {
+      console.log(data);
+      setProducts(data.products)})
     .finally(() => {
       setLoading(false)
     })
@@ -95,9 +98,12 @@ export const Products = ({ onCartChange }: { onCartChange: (cart: Cart) => void 
 
   return (
     <Box flex={1} display="flex" flexDirection="row">
-        <Categories/>
+        <Categories
+          searchParams={searchParams}
+          setSearchParams={setSearchParams}
+        />
         <Box flex={1}>
-        <Box overflow="scroll" height="100%">
+        <Box height="100%">
       <FilterControls
         setSearchParams={setSearchParams}
         searchParams={searchParams}
@@ -112,7 +118,7 @@ export const Products = ({ onCartChange }: { onCartChange: (cart: Cart) => void 
           :
             <>
               {products.length > 0 ? products.map(product => (
-                <Grid item xs={4}>
+                <Grid item xs={4} key={product.id}>
                   {/* Do not remove this */}
                   <HeavyComponent/>
                   <Card key={product.id} style={{ width: '100%' }}>
