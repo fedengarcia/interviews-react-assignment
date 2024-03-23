@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyledAutocomplete, StyledTextField } from './StyledDropdown';
+import { StyledAutocomplete, StyledTextField } from '../styled-components/materialUIExtensions';
 
 
 
