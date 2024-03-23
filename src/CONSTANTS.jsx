@@ -1,4 +1,5 @@
 export const PAGINATION_OPTIONS = [
+    {label: 'All', value: '200'},
     {label: '6', value: '6'},
     {label: '12', value: '12'},
     {label: '18', value: '18'},
