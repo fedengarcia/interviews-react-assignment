@@ -21,12 +21,10 @@ const FilterControls = ({
     }, [])
 
     // On key press(Intro) Search
-    const handleKeyPressSearch = (event) => {
-        if (event.key === 'Enter') {
-            updateSearchParams('q', searchText);
-            setSearchText('')
-        }
-    }
+    useEffect(() => {
+      updateSearchParams('q', searchText);
+    }, [searchText]);
+    
 
         // Update Search Params
     const updateSearchParams = (searchOption, value) => {
