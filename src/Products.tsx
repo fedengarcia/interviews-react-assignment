@@ -17,8 +17,6 @@ import { useLocation, useSearchParams } from 'react-router-dom';
 import FilterControls from './components/FilterControls/FilterControls.tsx';
 import {StyledFlexCenter} from  './components/styled-components/containers'
 import { Categories } from './Categories.tsx';
-import { PAGINATION_OPTIONS } from './constants';
-import { PaginationOption } from './constants';
 
 export type Product = {
   id: number;
