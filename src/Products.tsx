@@ -14,9 +14,9 @@ import RemoveIcon from '@mui/icons-material/Remove';
 import AddIcon from '@mui/icons-material/Add';
 import { HeavyComponent } from './HeavyComponent.tsx';
 import { useLocation, useSearchParams } from 'react-router-dom';
-import { PAGINATION_OPTIONS } from './CONSTANTS';
 import FilterControls from './components/FilterControls/FilterControls.tsx';
 import {StyledFlexCenter} from  './components/styled-components/containers'
+import { Categories } from './Categories.tsx';
 
 export type Product = {
   id: number;
@@ -94,7 +94,10 @@ export const Products = ({ onCartChange }: { onCartChange: (cart: Cart) => void 
 
 
   return (
-    <Box overflow="scroll" height="100%">
+    <Box flex={1} display="flex" flexDirection="row">
+        <Categories/>
+        <Box flex={1}>
+        <Box overflow="scroll" height="100%">
       <FilterControls
         setSearchParams={setSearchParams}
         searchParams={searchParams}
@@ -163,5 +166,8 @@ export const Products = ({ onCartChange }: { onCartChange: (cart: Cart) => void 
         
       </Grid>
     </Box>
+        </Box>
+      </Box>
+    
   );
 };

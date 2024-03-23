@@ -1,7 +1,16 @@
 import React from 'react';
 import { StyledAutocomplete, StyledTextField } from '../styled-components/materialUIExtensions';
+import { PaginationOption } from '../../constants';
 
-
+interface IDropdownProps {
+    options: PaginationOption[]
+    label: string
+    labelOptions: string
+    multiple: boolean
+    width: string
+    bgColor: string
+    disableCloseOnSelect: boolean
+}
 
 const Dropdown = ({
     options,
@@ -11,23 +20,22 @@ const Dropdown = ({
     width = '100%',
     bgColor = 'transparent',
     disableCloseOnSelect,
-    renderOption,
     ...props
-}) => {
+}: IDropdownProps) => {
     return (
         <StyledAutocomplete
             disablePortal
             id={label ? `autocomplete-dropdown-${label.toLowerCase()}` : 'autocomplete-dropdown'}
-            getOptionLabel={(option) => option[labelOptions]}
+            getOptionLabel={(option: PaginationOption) => option[labelOptions]}
             options={options}
             multiple={false}
             width={width}
             disableClearable={true}
             disableCloseOnSelect={true}
             bgcolor={bgColor}
-            renderOption={(props, option, { selected }) => (
+            renderOption={(props, option:PaginationOption) => (
                 <li {...props}>
-                    {renderOption ? renderOption(option, selected) : option[labelOptions]}
+                    {option[labelOptions]}
                 </li>
             )}
             renderInput={(params) =>

@@ -18,13 +18,7 @@ function App() {
     <Box height="100vh" display="flex" flexDirection="column">
       <CssBaseline/>
       <AppNavbar quantity={cart?.totalItems || 0} price={cart?.totalPrice || 0}/>
-      <Box flex={1} display="flex" flexDirection="row">
-        <Categories/>
-        <Box flex={1}>
-          <Products onCartChange={onCartChange}/>
-        </Box>
-      </Box>
-
+      <Products onCartChange={onCartChange}/>
     </Box>
   );
 }

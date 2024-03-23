@@ -1,41 +1,49 @@
-import React, { useEffect, useState } from 'react';
+import React, { ChangeEvent, useEffect, useState } from 'react';
 import Dropdown from '../Dropdown/Dropdown';
 import { PAGINATION_OPTIONS } from '../../CONSTANTS';
 import {StyledFilterControlsContainer, StyledFlexCenter} from '../styled-components/containers'
 import SearchIcon from '@mui/icons-material/Search';
 import ClearIcon from '@mui/icons-material/Clear';
 import {StyledSearchIconWrapper, StyledSearch, StyledInputBase} from '../styled-components/materialUIExtensions'
+import { PaginationOption } from '../../constants';
+
+type FilterControlProps = { 
+    setSearchParams: (params: URLSearchParams) => void;
+    searchParams: URLSearchParams;
+}
 
 const FilterControls = ({
     setSearchParams,
     searchParams
-}) => {
+}: FilterControlProps) => {
     const [limitSearchParam, setLimitSearchParam] = useState(PAGINATION_OPTIONS[0])
     const [searchText, setSearchText] = useState('');
 
-  // Set default filters
+  // Set limit default all
     useEffect(() => {
         if (!searchParams.has('limit')) searchParams.set('limit', PAGINATION_OPTIONS[0].value)
         setLimitSearchParam(PAGINATION_OPTIONS[0])
-        setSearchParams(searchParams, { replace: true })
+        setSearchParams(searchParams)
     }, [])
 
-    // On key press(Intro) Search
+    // Search product
     useEffect(() => {
       updateSearchParams('q', searchText);
     }, [searchText]);
     
 
         // Update Search Params
-    const updateSearchParams = (searchOption, value) => {
+    const updateSearchParams = ( searchOption: string, value: string) => {
         if (searchOption === 'limit') {
-            let val = PAGINATION_OPTIONS.find((option) => option.label === PAGINATION_OPTIONS[value].label)
-            setLimitSearchParam(val)
-            searchParams.set('limit', val.value)
+            let val = PAGINATION_OPTIONS.find((option: PaginationOption) => option.label === PAGINATION_OPTIONS[parseInt(value)].label)
+            if(val){
+                setLimitSearchParam(val)
+                searchParams.set('limit', val.value)
+            }
         } else {
             searchParams.set(`${searchOption}`, value)
         }
-        setSearchParams(searchParams, { replace: false })
+        setSearchParams(searchParams)
     }
 
     return (
@@ -46,8 +54,7 @@ const FilterControls = ({
                 <SearchIcon/>
                 </StyledSearchIconWrapper>
                 <StyledInputBase
-                    onChange={(e) => setSearchText(e.target.value)}
-                    onKeyDown={(e) => handleKeyPressSearch(e)}
+                    onChange={(e: ChangeEvent<HTMLInputElement>) => setSearchText(e.target.value)}
                     placeholder="Search…"
                     type='search'
                     inputProps={{ 'aria-label': 'search' }}
@@ -55,7 +62,7 @@ const FilterControls = ({
             </StyledSearch>
             <Dropdown
                 value={limitSearchParam}
-                onChange={(e) => updateSearchParams('limit', e.target.dataset.optionIndex)}
+                onChange={(e: ChangeEvent<HTMLInputElement>) => updateSearchParams('limit', e.target.dataset.optionIndex || '')}
                 options={PAGINATION_OPTIONS}
                 labelOptions='label'
                 label='Per page'
