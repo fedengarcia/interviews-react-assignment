@@ -37,6 +37,7 @@ export const Products = ({ onCartChange }: { onCartChange: (cart: Cart) => void 
   const [searchParams, setSearchParams] = useSearchParams()
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
+  const [isScrollBottom, setIsScrollBottom] = useState<boolean>(false);
   const location = useLocation();
 
 
@@ -55,6 +56,26 @@ export const Products = ({ onCartChange }: { onCartChange: (cart: Cart) => void 
     ;
   }, [searchParams]);
 
+
+  // Listener scroll beheavior to detect scrollBottom
+  useEffect(() => {
+     window.addEventListener('scroll', checkScrollBottom);
+
+     return () => {
+       window.removeEventListener('scroll', checkScrollBottom);
+     };
+  }, []);
+  
+
+  /** Check if user scroll is bottom */
+  const checkScrollBottom = () => {
+    const scrollTop = (document.documentElement && document.documentElement.scrollTop) || document.body.scrollTop;
+    const scrollHeight = (document.documentElement && document.documentElement.scrollHeight) || document.body.scrollHeight;
+    const clientHeight = document.documentElement.clientHeight || window.innerHeight;
+    
+    setIsScrollBottom(scrollTop + clientHeight >= scrollHeight);
+    
+  }
   
 
   function addToCart(productId: number, quantity: number) {
@@ -102,75 +123,75 @@ export const Products = ({ onCartChange }: { onCartChange: (cart: Cart) => void 
         />
         <Box flex={1}>
         <Box height="100%">
-      <FilterControls
-        setSearchParams={setSearchParams}
-        searchParams={searchParams}
-      />
-      <Grid container spacing={2} p={2}>
-        {loading 
-          ? 
-            <StyledFlexCenter>
-              <CircularProgress size={20} style={{marginRight: '10px'}}/>
-              Loading...
-            </StyledFlexCenter>
-          :
-            <>
-              {products.length > 0 ? products.map(product => (
-                <Grid item xs={4} key={product.id}>
-                  {/* Do not remove this */}
-                  <HeavyComponent/>
-                  <Card key={product.id} style={{ width: '100%' }}>
-                    <CardMedia
-                      component="img"
-                      height="150"
-                      image={product.imageUrl}
-                    />
-                    <CardContent>
-                      <Typography gutterBottom variant="h6" component="div">
-                        {product.name}
-                      </Typography>
-                      <Typography variant="body2" color="text.secondary">
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-                      </Typography>
-                    </CardContent>
-                    <CardActions>
-                      <Typography variant="h6" component="div">
-                        ${product.price}
-                      </Typography>
-                      <Box flexGrow={1}/>
-                      <Box position="relative" display="flex" flexDirection="row" alignItems="center">
-                        <Box position="absolute" left={0} right={0} top={0} bottom={0} textAlign="center">
-                          {product.loading && <CircularProgress size={20}/>}
-                        </Box>
-                        <IconButton disabled={product.loading} aria-label="delete" size="small"
-                                    onClick={() => addToCart(product.id, -1)}>
-                          <RemoveIcon fontSize="small"/>
-                        </IconButton>
+          <FilterControls
+            setSearchParams={setSearchParams}
+            searchParams={searchParams}
+          />
+          <Grid container spacing={2} p={2}>
+            {loading 
+              ? 
+                <StyledFlexCenter>
+                  <CircularProgress size={20} style={{marginRight: '10px'}}/>
+                  Loading...
+                </StyledFlexCenter>
+              :
+                <>
+                  {products.length > 0 ? products.map(product => (
+                    <Grid item xs={4} key={product.id}>
+                      {/* Do not remove this */}
+                      <HeavyComponent/>
+                      <Card key={product.id} style={{ width: '100%' }}>
+                        <CardMedia
+                          component="img"
+                          height="150"
+                          image={product.imageUrl}
+                        />
+                        <CardContent>
+                          <Typography gutterBottom variant="h6" component="div">
+                            {product.name}
+                          </Typography>
+                          <Typography variant="body2" color="text.secondary">
+                            Lorem ipsum dolor sit amet, consectetur adipiscing elit,
+                          </Typography>
+                        </CardContent>
+                        <CardActions>
+                          <Typography variant="h6" component="div">
+                            ${product.price}
+                          </Typography>
+                          <Box flexGrow={1}/>
+                          <Box position="relative" display="flex" flexDirection="row" alignItems="center">
+                            <Box position="absolute" left={0} right={0} top={0} bottom={0} textAlign="center">
+                              {product.loading && <CircularProgress size={20}/>}
+                            </Box>
+                            <IconButton disabled={product.loading} aria-label="delete" size="small"
+                                        onClick={() => addToCart(product.id, -1)}>
+                              <RemoveIcon fontSize="small"/>
+                            </IconButton>
 
-                        <Typography variant="body1" component="div" mx={1}>
-                          {product.itemInCart || 0}
-                        </Typography>
+                            <Typography variant="body1" component="div" mx={1}>
+                              {product.itemInCart || 0}
+                            </Typography>
 
-                        <IconButton disabled={product.loading} aria-label="add" size="small"
-                                    onClick={() => addToCart(product.id, 1)}>
-                          <AddIcon fontSize="small"/>
-                        </IconButton>
-                      </Box>
-                    </CardActions>
-                  </Card>
-                </Grid>
-              ))
-                :
-                <p style={{textAlign:'center', width: '100%'}}>
-                  0 items found
-                </p>
+                            <IconButton disabled={product.loading} aria-label="add" size="small"
+                                        onClick={() => addToCart(product.id, 1)}>
+                              <AddIcon fontSize="small"/>
+                            </IconButton>
+                          </Box>
+                        </CardActions>
+                      </Card>
+                    </Grid>
+                  ))
+                    :
+                    <p style={{textAlign:'center', width: '100%'}}>
+                      0 items found
+                    </p>
+                }
+                </>
             }
-            </>
-        }
-        
-      </Grid>
+          </Grid>
     </Box>
         </Box>
+        {isScrollBottom && }
       </Box>
     
   );
