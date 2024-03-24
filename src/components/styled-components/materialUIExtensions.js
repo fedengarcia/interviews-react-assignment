@@ -1,4 +1,4 @@
-import { Autocomplete, TextField } from "@mui/material";
+import { Autocomplete, Button, TextField } from "@mui/material";
 import { styled, alpha } from '@mui/material/styles';
 import InputBase from '@mui/material/InputBase';
 
@@ -67,3 +67,10 @@ export const StyledInputBase = styled(InputBase)(({ theme }) => ({
    
     },
 }));
+
+
+export const StyledButton = styled(Button)`
+
+
+
+`

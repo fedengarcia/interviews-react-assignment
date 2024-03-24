@@ -11,7 +11,8 @@ import { PaginationOption, SearchParamsProps } from '../../constants';
 
 const FilterControls = ({
     setSearchParams,
-    searchParams
+    searchParams,
+    setLimitSelected
 }: SearchParamsProps) => {
     const [limitSearchParam, setLimitSearchParam] = useState({})
     const [searchText, setSearchText] = useState('');
@@ -38,6 +39,7 @@ const FilterControls = ({
             let val = PAGINATION_OPTIONS.find((option: PaginationOption) => option.label === PAGINATION_OPTIONS[parseInt(value)].label)
             if(val){
                 setLimitSearchParam(val)
+                setLimitSelected(val.value)
                 searchParams.set('limit', val.value)
             }
         } else {

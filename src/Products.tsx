@@ -16,6 +16,7 @@ import { HeavyComponent } from './HeavyComponent.tsx';
 import { useLocation, useSearchParams } from 'react-router-dom';
 import FilterControls from './components/FilterControls/FilterControls.tsx';
 import {StyledFlexCenter} from  './components/styled-components/containers'
+import {StyledButton} from  './components/styled-components/materialUIExtensions'
 import { Categories } from './Categories.tsx';
 
 export type Product = {
@@ -37,7 +38,10 @@ export const Products = ({ onCartChange }: { onCartChange: (cart: Cart) => void 
   const [searchParams, setSearchParams] = useSearchParams()
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
+  const [loadingScroll, setLoadingScroll] = useState<boolean>(false);
+  const [limitSelected, setLimitSelected] = useState('6')
   const [isScrollBottom, setIsScrollBottom] = useState<boolean>(false);
+  const [hasMore, setHasMore] = useState<boolean>(true);
   const location = useLocation();
 
 
@@ -48,7 +52,7 @@ export const Products = ({ onCartChange }: { onCartChange: (cart: Cart) => void 
     fetch(url)
     .then(response => response.json())
     .then(data => {
-      console.log(data);
+      setHasMore(data.hasMore)
       setProducts(data.products)})
     .finally(() => {
       setLoading(false)
@@ -67,6 +71,30 @@ export const Products = ({ onCartChange }: { onCartChange: (cart: Cart) => void 
   }, []);
   
 
+  useEffect(() => {
+    if(isScrollBottom && hasMore && loadingScroll){
+        setLoadingScroll(true)
+        let paramlimit = parseInt(searchParams.get('limit') || '6') 
+        let newLimit = (paramlimit + parseInt(limitSelected)).toString()
+        setLimitSelected(newLimit)
+        
+        let url = `/products${location.search}`
+        url = url.replace(`${paramlimit}`,newLimit)
+        console.log(url);
+        fetch(url)
+        .then(response => response.json())
+        .then(data => {
+          setHasMore(data.hasMore)
+          setProducts(data.products)})
+        .finally(() => {
+          setLoadingScroll(false)
+          setLoading(false)
+        })
+
+      }
+  }, [isScrollBottom]);
+  
+
   /** Check if user scroll is bottom */
   const checkScrollBottom = () => {
     const scrollTop = (document.documentElement && document.documentElement.scrollTop) || document.body.scrollTop;
@@ -74,9 +102,9 @@ export const Products = ({ onCartChange }: { onCartChange: (cart: Cart) => void 
     const clientHeight = document.documentElement.clientHeight || window.innerHeight;
     
     setIsScrollBottom(scrollTop + clientHeight >= scrollHeight);
-    
   }
   
+
 
   function addToCart(productId: number, quantity: number) {
     setProducts(products.map(product => {
@@ -126,6 +154,7 @@ export const Products = ({ onCartChange }: { onCartChange: (cart: Cart) => void 
           <FilterControls
             setSearchParams={setSearchParams}
             searchParams={searchParams}
+            setLimitSelected={setLimitSelected}
           />
           <Grid container spacing={2} p={2}>
             {loading 
@@ -188,10 +217,13 @@ export const Products = ({ onCartChange }: { onCartChange: (cart: Cart) => void 
                 }
                 </>
             }
+            <StyledFlexCenter style={{margin: '2em'}}>
+              {isScrollBottom && loadingScroll && <CircularProgress size={20}/>}
+            </StyledFlexCenter>
+
           </Grid>
-    </Box>
+          </Box>
         </Box>
-        {isScrollBottom && }
       </Box>
     
   );
