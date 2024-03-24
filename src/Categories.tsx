@@ -4,20 +4,23 @@ import { useState } from 'react';
 
 const drawerWidth = 180;
 
-const categories = ['Fruit', 'Vegetables', 'Dairy', 'Bakery', 'Meat', 'Seafood', 'Snacks', 'Beverages'];
+const categories = ['All','Fruit', 'Vegetables', 'Dairy', 'Bakery', 'Meat', 'Seafood', 'Snacks', 'Beverages'];
 
 export const Categories = ({
   searchParams,
   setSearchParams
 }: SearchParamsProps) => {
-    const [categorySelected, setCategorySelected] = useState<string>('Fruit');
+    const [categorySelected, setCategorySelected] = useState<string>('All');
 
 
      // Update Search Params
     const updateSearchParams = ( searchOption: string, value: string) => {        
-        searchParams.set(`${searchOption}`, value)
+        if(value === 'All'){
+          searchParams.delete(`${searchOption}`)
+        }else{
+          searchParams.set(`${searchOption}`, value)
+        }
         setSearchParams(searchParams)
-        console.log(value);
         setCategorySelected(value)
     }
 
