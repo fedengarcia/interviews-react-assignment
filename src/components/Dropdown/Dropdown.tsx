@@ -15,7 +15,7 @@ interface IDropdownProps {
 const Dropdown = ({
     options,
     label = '',
-    labelOptions = 'title',
+    labelOptions = 'label',
     multiple = true,
     width = '100%',
     bgColor = 'transparent',
