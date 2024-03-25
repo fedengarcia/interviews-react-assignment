@@ -26,7 +26,6 @@ export type Product = {
   price: number;
   category: string;
   itemInCart: number;
-  loading: boolean;
 };
 
 export type Cart = {
@@ -34,7 +33,7 @@ export type Cart = {
   totalPrice: number;
   totalItems: number;
 }
-export const Products = ({ onCartChange }: { onCartChange: (cart: Cart) => void }) => {
+export const Products = () => {
   const [searchParams, setSearchParams] = useSearchParams()
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
@@ -71,6 +70,7 @@ export const Products = ({ onCartChange }: { onCartChange: (cart: Cart) => void 
   }, []);
   
 
+  // If scroll bottom, add limit to products list without change the params of the url
   useEffect(() => {
     if(isScrollBottom && hasMore && loadingScroll){
         setLoadingScroll(true)
@@ -80,7 +80,7 @@ export const Products = ({ onCartChange }: { onCartChange: (cart: Cart) => void 
         
         let url = `/products${location.search}`
         url = url.replace(`${paramlimit}`,newLimit)
-        console.log(url);
+
         fetch(url)
         .then(response => response.json())
         .then(data => {
@@ -104,6 +104,10 @@ export const Products = ({ onCartChange }: { onCartChange: (cart: Cart) => void 
     setIsScrollBottom(scrollTop + clientHeight >= scrollHeight);
   }
   
+  useEffect(() => {
+    console.log(products);
+  }, [products]);
+  
 
 
   function addToCart(productId: number, quantity: number) {
@@ -111,36 +115,13 @@ export const Products = ({ onCartChange }: { onCartChange: (cart: Cart) => void 
       if (product.id === productId) {
         return {
           ...product,
-          loading: true,
+          itemInCart: product.itemInCart === 0 && quantity === -1 ? 0 : (product.itemInCart || 0) + quantity,
         };
       }
       return product;
     }));
-    fetch('/cart', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ productId, quantity }),
-    }).then(async response => {
-      if (response.ok) {
-        const cart = await response.json();
-        setProducts(products.map(product => {
-          if (product.id === productId) {
-            return {
-              ...product,
-              itemInCart: (product.itemInCart || 0) + quantity,
-              loading: false,
-            };
-          }
-          return product;
-        }));
-        onCartChange(cart);
 
-      }
-    });
   }
-
 
 
   return (
@@ -189,10 +170,7 @@ export const Products = ({ onCartChange }: { onCartChange: (cart: Cart) => void 
                           </Typography>
                           <Box flexGrow={1}/>
                           <Box position="relative" display="flex" flexDirection="row" alignItems="center">
-                            <Box position="absolute" left={0} right={0} top={0} bottom={0} textAlign="center">
-                              {product.loading && <CircularProgress size={20}/>}
-                            </Box>
-                            <IconButton disabled={product.loading} aria-label="delete" size="small"
+                            <IconButton aria-label="delete" size="small"
                                         onClick={() => addToCart(product.id, -1)}>
                               <RemoveIcon fontSize="small"/>
                             </IconButton>
@@ -201,7 +179,7 @@ export const Products = ({ onCartChange }: { onCartChange: (cart: Cart) => void 
                               {product.itemInCart || 0}
                             </Typography>
 
-                            <IconButton disabled={product.loading} aria-label="add" size="small"
+                            <IconButton aria-label="add" size="small"
                                         onClick={() => addToCart(product.id, 1)}>
                               <AddIcon fontSize="small"/>
                             </IconButton>

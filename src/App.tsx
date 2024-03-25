@@ -3,22 +3,16 @@ import CssBaseline from "@mui/material/CssBaseline";
 import Box from "@mui/material/Box";
 import AppNavbar from './AppNavbar.tsx';
 import { Categories } from './Categories.tsx';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
+import { CartContext } from './providers/CartProvider/CartProvider.tsx';
 
 function App() {
-
-  const [cart, setCart] = useState<Cart>();
-
-
-  function onCartChange(cart: Cart) {
-    setCart(cart);
-  }
 
   return (
     <Box height="100vh" display="flex" flexDirection="column">
       <CssBaseline/>
-      <AppNavbar quantity={cart?.totalItems || 0} price={cart?.totalPrice || 0}/>
-      <Products onCartChange={onCartChange}/>
+      <AppNavbar />
+      <Products/>
     </Box>
   );
 }

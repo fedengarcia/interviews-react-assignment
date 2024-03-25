@@ -5,10 +5,15 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import { Badge } from '@mui/material';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import { useContext } from 'react';
+import { CartContext } from './providers/CartProvider/CartProvider';
 
 
 
-export default function AppNavbar({ quantity, price }: { quantity: number, price: number }) {
+export default function AppNavbar() {
+  const {cartItems} = useContext(CartContext);
+  const quantity = cartItems.length || 0
+  const price = 0
   return (
     <Box>
       <AppBar position="relative">
